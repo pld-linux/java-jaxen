@@ -1,10 +1,14 @@
 # TODO:
-# - package docs (not javadoc)
-# - use source... ech... BR loops...
+# - build
 #
 # Conditional build:
 %bcond_without	javadoc		# don't build javadoc
 %bcond_without	tests		# don't build and run tests
+%if "%{pld_release}" == "ti"
+%bcond_without	java_sun	# build with gcj
+%else
+%bcond_with	java_sun	# build with java-sun
+%endif
 #
 %include	/usr/lib/rpm/macros.java
 #
@@ -15,9 +19,11 @@ Version:	1.1.1
 Release:	0.1
 License:	BSD-like
 Group:		Libraries/Java
-Source0:	http://dist.codehaus.org/jaxen/distributions/jaxen-%{version}.tar.gz
-# Source0-md5:	6bb10007f84f65ac6db4d1794f3e9d63
+Source0:	http://dist.codehaus.org/jaxen/distributions/jaxen-%{version}-src.tar.gz
+# Source0-md5:	b598ae6b7e765a92e13667b0a80392f4
 URL:		http://jaxen.codehaus.org/
+%{!?with_java_sun:BuildRequires:	java-gcj-compat-devel}
+%{?with_java_sun:BuildRequires:	java-sun}
 BuildRequires:	jpackage-utils
 BuildRequires:	rpm-javaprov
 BuildRequires:	rpmbuild(macros) >= 1.300
@@ -61,16 +67,34 @@ Pliki demonstracyjne i przykłady dla pakietu %{srcname}.
 %prep
 %setup -q -n %{srcname}-%{version}
 
+%build
+#CLASSPATH=$(build-classpath jaxen)
+#export CLASSPATH
+export JAVA_HOME="%{java_home}"
+
+install -d build
+#%javac -classpath $CLASSPATH -source 1.5 -target 1.5 -d build $(find -name '*.java')
+
+%if %{with javadoc}
+%javadoc -d apidocs \
+	%{?with_java_sun:org.jaxen} \
+	$(find src/java/main/org/jaxen/ -name '*.java')
+%endif
+
+%jar -cf %{srcname}-%{version}.jar -C build .
+
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_javadir}
-
 cp -a %{srcname}-%{version}.jar $RPM_BUILD_ROOT%{_javadir}/%{srcname}-%{version}.jar
 ln -s %{srcname}-%{version}.jar $RPM_BUILD_ROOT%{_javadir}/%{srcname}.jar
 
-install -d $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
-cp -a docs/apidocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
-ln -s %{name}-%{version} $RPM_BUILD_ROOT%{_javadocdir}/%{name} # ghost symlink
+# javadoc
+%if %{with javadoc}
+install -d $RPM_BUILD_ROOT%{_javadocdir}/%{srcname}-%{version}
+cp -a apidocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{srcname}-%{version}
+ln -s %{srcname}-%{version} $RPM_BUILD_ROOT%{_javadocdir}/%{srcname} # ghost symlink
+%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -80,10 +104,13 @@ ln -nfs %{name}-%{version} %{_javadocdir}/%{name}
 
 %files
 %defattr(644,root,root,755)
-%{_javadir}/*.jar
+%{_javadir}/%{srcname}-%{version}.jar
+%{_javadir}/%{srcname}.jar
 %doc LICENSE.txt
 
+%if %{with javadoc}
 %files javadoc
 %defattr(644,root,root,755)
-%{_javadocdir}/%{name}-%{version}
-%ghost %{_javadocdir}/%{name}
+%{_javadocdir}/%{srcname}-%{version}
+%ghost %{_javadocdir}/%{srcname}
+%endif
