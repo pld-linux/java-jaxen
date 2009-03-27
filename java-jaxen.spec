@@ -39,8 +39,8 @@ compiled Java byte code or Java beans as XML, thus enabling you to
 query these trees with XPath too.
 
 %package javadoc
-Summary:	Online manual for %{name}
-Summary(pl.UTF-8):	Dokumentacja online do %{name}
+Summary:	Online manual for %{srcname}
+Summary(pl.UTF-8):	Dokumentacja online do %{srcname}
 Group:		Documentation
 Requires:	jpackage-utils
 
@@ -54,7 +54,7 @@ Dokumentacja do %{srcname}.
 Javadoc pour %{srcname}.
 
 %package examples
-Summary:	Examples for %{name}
+Summary:	Examples for %{srcname}
 Summary(pl.UTF-8):	Przykłady dla pakietu %{name}
 Group:		Documentation
 Requires:	%{name} = %{epoch}:%{version}-%{release}
@@ -101,7 +101,7 @@ ln -s %{srcname}-%{version} $RPM_BUILD_ROOT%{_javadocdir}/%{srcname} # ghost sym
 rm -rf $RPM_BUILD_ROOT
 
 %post javadoc
-ln -nfs %{name}-%{version} %{_javadocdir}/%{name}
+ln -nfs %{name}-%{version} %{_javadocdir}/%{srcname}
 
 %files
 %defattr(644,root,root,755)
