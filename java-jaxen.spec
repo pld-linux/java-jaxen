@@ -24,6 +24,7 @@ Source0:	http://dist.codehaus.org/jaxen/distributions/jaxen-%{version}-src.tar.g
 URL:		http://jaxen.codehaus.org/
 %{!?with_java_sun:BuildRequires:	java-gcj-compat-devel}
 %{?with_java_sun:BuildRequires:	java-sun}
+BuildRequires:	java-dom4j
 BuildRequires:	jpackage-utils
 BuildRequires:	rpm-javaprov
 BuildRequires:	rpmbuild(macros) >= 1.300
@@ -68,7 +69,7 @@ Pliki demonstracyjne i przykłady dla pakietu %{srcname}.
 %setup -q -n %{srcname}-%{version}
 
 %build
-#CLASSPATH=$(build-classpath jaxen)
+CLASSPATH=$(build-classpath dom4j)
 #export CLASSPATH
 export JAVA_HOME="%{java_home}"
 
