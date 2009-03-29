@@ -4,10 +4,10 @@
 # Conditional build:
 %bcond_without	javadoc		# don't build javadoc
 %bcond_without	tests		# don't build and run tests
-%if "%{pld_release}" == "ti"
-%bcond_without	java_sun	# build with gcj
-%else
 %bcond_with	java_sun	# build with java-sun
+#
+%if "%{pld_release}" == "ti"
+%define	with_java_sun	1
 %endif
 #
 %include	/usr/lib/rpm/macros.java
@@ -18,7 +18,7 @@ Name:		java-jaxen
 Version:	1.1.1
 Release:	0.1
 License:	BSD-like
-Group:		Libraries/Java
+Group:		Development/Languages/Java
 Source0:	http://dist.codehaus.org/jaxen/distributions/jaxen-%{version}-src.tar.gz
 # Source0-md5:	b598ae6b7e765a92e13667b0a80392f4
 URL:		http://jaxen.codehaus.org/
