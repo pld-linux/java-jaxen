@@ -16,7 +16,7 @@ Name:		java-jaxen
 Version:	1.1.1
 Release:	0.1
 License:	BSD-like
-Group:		Development/Languages/Java
+Group:		Libraries/Java
 Source0:	http://dist.codehaus.org/jaxen/distributions/jaxen-%{version}-src.tar.gz
 # Source0-md5:	b598ae6b7e765a92e13667b0a80392f4
 URL:		http://jaxen.codehaus.org/
