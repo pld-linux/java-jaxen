@@ -4,15 +4,13 @@
 # Conditional build:
 %bcond_without	javadoc		# don't build javadoc
 %bcond_without	tests		# don't build and run tests
-%bcond_with	java_sun	# build with java-sun
-#
 %if "%{pld_release}" == "ti"
-%define	with_java_sun	1
-%endif
-#
-%include	/usr/lib/rpm/macros.java
-#
+%bcond_without java_sun        # build with gcj
+%else
+%bcond_with    java_sun        # build with java-sun
+
 %define		srcname		jaxen
+%include	/usr/lib/rpm/macros.java
 Summary:	Jaxen
 Name:		java-jaxen
 Version:	1.1.1
@@ -22,10 +20,11 @@ Group:		Development/Languages/Java
 Source0:	http://dist.codehaus.org/jaxen/distributions/jaxen-%{version}-src.tar.gz
 # Source0-md5:	b598ae6b7e765a92e13667b0a80392f4
 URL:		http://jaxen.codehaus.org/
+BuildRequires:	java-dom4j
 %{!?with_java_sun:BuildRequires:	java-gcj-compat-devel}
 %{?with_java_sun:BuildRequires:	java-sun}
-BuildRequires:	java-dom4j
 BuildRequires:	jpackage-utils
+BuildRequires:	rpm >= 4.4.9-56
 BuildRequires:	rpm-javaprov
 BuildRequires:	rpmbuild(macros) >= 1.300
 BuildArch:	noarch
