@@ -8,6 +8,7 @@
 %bcond_without java_sun        # build with gcj
 %else
 %bcond_with    java_sun        # build with java-sun
+%endif
 
 %define		srcname		jaxen
 %include	/usr/lib/rpm/macros.java
