@@ -5,7 +5,6 @@
 %bcond_without	javadoc		# don't build javadoc
 %bcond_without	tests		# don't build and run tests
 %define		srcname		jaxen
-%include	/usr/lib/rpm/macros.java
 Summary:	Jaxen
 Name:		java-jaxen
 Version:	1.1.1
